@@ -15,7 +15,6 @@ $instrument = $jsonContent.instrument
 $basePath = "\\storage.jgi.lbl.gov\metabolomics"
 $departmentDataPath = Join-Path -Path $basePath -ChildPath $department
 
-
 # Check if SPSS shared drive is connected as S drive
 if (Test-Path -Path “S:”){
 "S drive configured. Continuing..."
@@ -52,8 +51,7 @@ robocopy C:\ `
     \\storage.jgi.lbl.gov\metabolomics\Inst_Backup\$department\$instrument `
     /e /MT:10 /R:10 /FFT /Z /W:5 /TS /np /v /A-:SH /zB `
     /XF ".raw" `
-    /XD "C:\DELL" "C:\Intel" "C:\Users" "C:\Windows" `
-    "C:\ProgramData\Dionex\Chromeleon\DataVaults\ChromeleonLocal\RawFiles" `
+    /XD "C:\DELL" "C:\Intel" "C:\Users" "C:\Windows" "C:\ProgramData\Dionex\Chromeleon\DataVaults\ChromeleonLocal\RawFiles" `
     /XJD "C:\ProgramData\ApplicationData\Dionex\Chromeleon\DataVaults\ChromeleonLocal\RawFiles" "C:\$RECYCLE.BIN" `
     /log:"\\storage.jgi.lbl.gov\metabolomics\Inst_Backup\$department\$instrument\${instrument}_C_Backup_Logs\$date.txt"
 
