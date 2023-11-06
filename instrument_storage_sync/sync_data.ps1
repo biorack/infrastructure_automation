@@ -33,7 +33,7 @@ Write-Host 'D drive sync in progress...’
 
 robocopy D:\ `
     $departmentDataPath `
-    /e /MT:10 /R:10 /FFT /Z /W:5 /TS /np /v /A-:SH /zB `
+    /e /MT:10 /R:10 /FFT /Z /W:5 /TS /np /v /A-:SH /zB /XJ `
     /XD "D:\staging" "D:\archive" `
     /XJD "D:\`$`RECYCLE.BIN" `
     /log:"$departmentDataPath\${instrument}_D_Backup_Logs\$date.txt"
@@ -49,7 +49,7 @@ Write-Host 'C drive sync in progress...’
 
 robocopy C:\ `
     \\storage.jgi.lbl.gov\metabolomics\Inst_Backup\$department\$instrument `
-    /e /MT:10 /R:10 /FFT /Z /W:5 /TS /np /v /A-:SH /zB `
+    /e /MT:10 /R:10 /FFT /Z /W:5 /TS /np /v /A-:SH /zB /XJ `
     /XF ".raw" `
     /XD "C:\DELL" "C:\Intel" "C:\Users" "C:\Windows" "C:\ProgramData\Dionex\Chromeleon\DataVaults\ChromeleonLocal\RawFiles" `
     /XJD "C:\ProgramData\ApplicationData\Dionex\Chromeleon\DataVaults\ChromeleonLocal\RawFiles" "C:\`$`RECYCLE.BIN" `
