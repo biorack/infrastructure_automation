@@ -5,8 +5,12 @@ export LD_LIBRARY_PATH="/global/common/software/m2650/lftp/lib:$LD_LIBRARY_PATH"
 
 # Check if the password argument is provided
 if [ "$#" -ne 1 ]; then
+  source /global/homes/m/msdata/gnps2/gnps2_bpbowen.txt
+  password=$MYVARIABLE
   echo "Usage: $0 <SFTP_PASSWORD>"
   exit 1
+else
+  password="$1"
 fi
 
 # Define your local and remote directories
@@ -15,7 +19,7 @@ remote_directory="/raw_data/jgi"
 remote_host="sftp.gnps2.org"
 remote_port="6542"
 remote_user="bpbowen"
-password="$1"
+password=password
 
 # Use lftp to synchronize the local and remote directories with the specified port
 # Use find to locate only files with a ".raw" extension in the local directory
