@@ -50,8 +50,8 @@ Write-Host 'C drive sync in progress...’
 robocopy C:\ `
     \\storage.jgi.lbl.gov\metabolomics\Inst_Backup\$department\$instrument `
     /e /MT:10 /R:10 /FFT /Z /W:5 /TS /np /v /A-:SH /zB /XJ `
-    /XF ".raw" `
-    /XD "C:\DELL" "C:\Intel" "C:\Users" "C:\Windows" "C:\ProgramData\Dionex\Chromeleon\DataVaults\ChromeleonLocal\RawFiles" `
+    /XF ".raw" "hiberfil.sys" "pagefile.sys" "swapfile.sys" `
+    /XD "C:\DELL" "C:\Intel" "C:\Users" "C:\Windows" "C:\ProgramData\Dionex\Chromeleon\DataVaults\ChromeleonLocal\RawFiles" "C:\Program Files\Windows Defender " "C:\Program Files\CrowdStrike" "C:\options\Sophos" "C:\Program Files\Windows Defender Advanced Threat Protection " "C:\ProgramData\Package Cache " `
     /XJD "C:\ProgramData\ApplicationData\Dionex\Chromeleon\DataVaults\ChromeleonLocal\RawFiles" "C:\`$`RECYCLE.BIN" `
     /log:"\\storage.jgi.lbl.gov\metabolomics\Inst_Backup\$department\$instrument\${instrument}_C_Backup_Logs\$date.txt"
 
