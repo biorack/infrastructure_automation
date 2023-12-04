@@ -11,7 +11,6 @@ else
   password="$1"
 fi
 
-
 # Define your local and remote directories
 local_directory="/global/cfs/cdirs/metatlas/raw_data/egsb"
 remote_directory="/raw_data/egsb"
