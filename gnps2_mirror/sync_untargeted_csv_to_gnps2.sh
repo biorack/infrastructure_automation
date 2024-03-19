@@ -29,9 +29,9 @@ EOF
 
 #lftp -e "mirror --parallel=4 --include '/*.mgf' -R $local_directory $remote_directory; quit" -u "$remote_user,$password" sftp://$remote_host:$remote_port
 
-#lftp -e "mirror --parallel=4 --include '/*,tab' -R $local_directory $remote_directory; quit" -u "$remote_user,$password" sftp://$remote_host:$remote_port
+#lftp -e "mirror --parallel=4 --include '/*.tab' -R $local_directory $remote_directory; quit" -u "$remote_user,$password" sftp://$remote_host:$remote_port
 
-#lftp -e "mirror --parallel=4 --include '/*,csv' -R $local_directory $remote_directory; quit" -u "$remote_user,$password" sftp://$remote_host:$remote_port
+#lftp -e "mirror --parallel=4 --include '/*.csv' -R $local_directory $remote_directory; quit" -u "$remote_user,$password" sftp://$remote_host:$remote_port
 
 # Explanation:
 # -e: Execute the specified command(s) in lftp
