@@ -1,0 +1,226 @@
+# Welcome to scrontab, Slurm's cron-like interface.
+#
+# Edit this file to submit recurring jobs to be run by Slurm.
+#
+# Note that jobs will be run based on the Slurm controller's
+# time and timezone.
+#
+# Lines must either be valid entries, comments (start with '#'),
+# or blank.
+#
+# Lines starting with #SCRON will be parsed for options to use
+# with the next cron line. E.g., "#SCRON --time 1" would request
+# a one minute timelimit be applied. See the sbatch man page for
+# options, although note that not all options are supported here.
+#
+# For example, the following line (when uncommented) would request
+# a job be run at 5am each day.
+# 0 5 * * * /my/script/to/run
+#
+# min hour day-of-month month day-of-week command
+#
+#
+# msdata scrontab jobs updated by BPK in August, 2024
+# TO SEE LEGACY JOBS, FIND BACKUPS AT: /global/homes/m/msdata
+#
+#
+
+######## FILE CONVERTERS ########
+
+#SCRON --job-name jgi_converter
+#SCRON -q cron
+#SCRON -A m2650
+#SCRON -t 24:00:00
+#SCRON -c 2
+#SCRON -o /global/cfs/cdirs/m2650/file_converter_logs/scrontab_jgi-%j.log
+#SCRON --open-mode=append
+*/5 * * * * /global/common/software/m2650/metatlas-repo/utils/convert_files.sh jgi
+
+#SCRON --job-name egsb_converter
+#SCRON -q cron
+#SCRON -A m2650
+#SCRON -t 24:00:00
+#SCRON -c 2
+#SCRON -o /global/cfs/cdirs/m2650/file_converter_logs/scrontab_egsb-%j.log
+#SCRON --open-mode=append
+*/5 * * * * /global/common/software/m2650/metatlas-repo/utils/convert_files.sh egsb
+
+############################
+
+
+######## EMAIL REPORTS ########
+
+#SCRON --job-name jgi_email_report
+#SCRON -q cron
+#SCRON -A m2650
+#SCRON -t 00:05:00
+#SCRON -o /global/cfs/cdirs/m2650/file_converter_logs/email_jgi_report.log
+#SCRON --open-mode=append
+0 15 * * TUE /global/common/software/m2650/metatlas-repo/utils/email_conversion_report.sh jgi 7
+
+#SCRON --job-name egsb_email_report
+#SCRON -q cron
+#SCRON -A m2650
+#SCRON -t 00:15:00
+#SCRON -o /global/cfs/cdirs/m2650/file_converter_logs/email_egsb_report.log
+#SCRON --open-mode=append
+0 15 * * TUE /global/common/software/m2650/metatlas-repo/utils/email_conversion_report.sh egsb 7
+
+#SCRON --job-name untargeted_warnings-errors_email_report
+#SCRON -q cron
+#SCRON -A m2650
+#SCRON -t 00:05:00
+#SCRON -o /global/cfs/cdirs/m2650/untargeted_logs/email_untargeted_warnings-errors_email_report.log
+#SCRON --open-mode=append
+0 15 * * * /global/common/software/m2650/metatlas-repo/utils/email_untargeted_pipeline_errors-warnings.sh 5 | ts
+
+#SCRON --job-name untargeted_project_email_report_jgi
+#SCRON -q cron
+#SCRON -A m2650
+#SCRON -t 00:15:00
+#SCRON -o /global/cfs/cdirs/m2650/untargeted_logs/email_untargeted_project_report.log
+#SCRON --open-mode=append
+#0 15 * * TUE /global/common/software/m2650/metatlas-repo/utils/email_untargeted_project_report.sh 7 jgi | ts
+
+#SCRON --job-name untargeted_project_email_report_egsb
+#SCRON -q cron
+#SCRON -A m2650
+#SCRON -t 00:15:00
+#SCRON -o /global/cfs/cdirs/m2650/untargeted_logs/email_untargeted_project_report.log
+#SCRON --open-mode=append
+#0 15 * * TUE /global/common/software/m2650/metatlas-repo/utils/email_untargeted_project_report.sh 7 eb | ts
+
+############################
+
+
+######## LOG ROTATORS AND CHECKERS ########
+
+#SCRON --job-name check_scrontab
+#SCRON -q cron
+#SCRON -A m2650
+#SCRON -t 00:01:00
+#SCRON -o /global/cfs/cdirs/m2650/jupyter_logs/scrontab_check.log
+#SCRON --open-mode=append
+*/10 * * * * output="$(scrontab -l | grep '^#DISABLED: ')"; [[ -n "$output" ]] && { echo "$output" | mailx -s 'scrontab DISABLED' 'bpb@nersc.gov'; } 2>&1 | ts
+
+#SCRON --job-name rotate_jupyter_logs
+#SCRON -q cron
+#SCRON -A m2650
+#SCRON -t 00:10:00
+#SCRON -o /global/cfs/cdirs/m2650/jupyter_logs/logrotate.log
+#SCRON --open-mode=append
+48 2 * * * /usr/sbin/logrotate --state /global/cfs/projectdirs/m2650/jupyter_logs/logrotate.status /global/cfs/projectdirs/m2650/jupyter_logs/logrotate.conf | ts
+
+#SCRON --job-name rotate_file_converter_logs
+#SCRON -q cron
+#SCRON -A m2650
+#SCRON -t 00:10:00
+#SCRON -o /global/cfs/cdirs/m2650/file_converter_logs/logrotate.log
+#SCRON --open-mode=append
+48 2 * * * /usr/sbin/logrotate --state /global/cfs/projectdirs/m2650/file_converter_logs/logrotate.status /global/cfs/projectdirs/m2650/file_converter_logs/logrotate.conf | ts
+
+#SCRON --job-name rotate_untargeted_logs
+#SCRON -q cron
+#SCRON -A m2650
+#SCRON -t 00:10:00
+#SCRON -o /global/cfs/projectdirs/m2650/untargeted_logs/logrotate.log
+#SCRON --open-mode=append
+48 2 * * * /usr/sbin/logrotate --state /global/cfs/projectdirs/m2650/untargeted_logs/logrotate.status /global/cfs/projectdirs/m2650/untargeted_logs/logrotate.conf | ts
+
+#SCRON --job-name rotate_copy_rename_logs
+#SCRON -q cron
+#SCRON -A m2650
+#SCRON -t 00:10:00
+#SCRON -o /global/cfs/projectdirs/m2650/copy_rename_logs/logrotate.log
+#SCRON --open-mode=append
+48 2 * * * /usr/sbin/logrotate --state /global/cfs/projectdirs/m2650/copy_rename_logs/logrotate.status /global/cfs/projectdirs/m2650/copy_rename_logs/logrotate.conf | ts
+
+############################
+
+
+####### UNTARGETED PIPELINE JOBS #######
+
+#SCRON --job-name untargeted_lims_update
+#SCRON -q cron
+#SCRON -A m2650
+#SCRON -t 00:30:00
+#SCRON -o /global/cfs/cdirs/m2650/untargeted_logs/lims_update.log
+#SCRON --open-mode=append
+*/30 * * * * /global/homes/m/msdata/.conda/envs/python-untargeted-v1/bin/python3.11 /global/common/software/m2650/metatlas-repo/metatlas/io/update_lcmsfiles_in_lims.py --update_file_tables True --update_lcmsrun_names True --update_lcmsrun_items True | ts
+
+#SCRON --job-name run_untargeted_pipeline
+#SCRON -q cron
+#SCRON -A m2650
+#SCRON -t 02:00:00
+#SCRON -o /global/cfs/cdirs/m2650/untargeted_logs/untargeted_pipeline.log
+#SCRON --open-mode=append
+#45 */6 * * * /global/homes/m/msdata/.conda/envs/python-untargeted-v1/bin/python3.11 /global/common/software/m2650/metatlas-repo/metatlas/untargeted/run_untargeted_pipeline.py
+
+############################
+
+
+####### REPO PULLS #######
+
+#SCRON --job-name shifter_pull_metatlas
+#SCRON -q cron
+#SCRON -A m2650
+#SCRON -t 00:05:00
+#SCRON -o /global/cfs/cdirs/m2650/jupyter_logs/shifter_pull_perlmutter.log
+#SCRON --open-mode=append
+*/5 * * * * { /usr/bin/shifterimg pull docker:ghcr.io/biorack/metatlas/metatlas_shifter:latest; shifterimg pull docker:ghcr.io/biorack/metatlas/analysis:latest; shifterimg pull docker:ghcr.io/biorack/metatlas/mzmine:latest; } 2>&1 >/dev/null | ts
+
+#SCRON --job-name metatlas_repo_pull
+#SCRON -q cron
+#SCRON -A m2650
+#SCRON -t 00:05:00
+#SCRON -o /global/cfs/cdirs/m2650/jupyter_logs/git_pull_perlmutter.log
+#SCRON --open-mode=append
+*/5 * * * * cd /global/common/software/m2650/metatlas-repo && git pull --quiet | ts
+
+#SCRON --job-name infrastructure_automation_repo_pull
+#SCRON -q cron
+#SCRON -A m2650
+#SCRON -t 00:05:00
+#SCRON -o /global/cfs/cdirs/m2650/gnps2_sync_logs/git_pull_perlmutter.log
+#SCRON --open-mode=append
+*/5 * * * * cd /global/common/software/m2650/infrastructure_automation && git pull --quiet | ts
+
+############################
+
+
+####### FILE UPLOADS/SYNCS #######
+
+#SCRON --job-name jgi_raw_data_to_s3_glacier
+#SCRON -q cron
+#SCRON -A m2650
+#SCRON -t 00:59:00
+#SCRON -o /global/cfs/cdirs/m2650/aws_s3_sync_log/jgi.log
+#SCRON --open-mode=append
+15 * * * * /global/common/software/m2650/metatlas-repo/utils/sync_to_aws.sh jgi | ts
+
+#SCRON --job-name egsb_raw_data_to_s3_glacier
+#SCRON -q cron
+#SCRON -A m2650
+#SCRON -t 00:59:00
+#SCRON -o /global/cfs/cdirs/m2650/aws_s3_sync_log/egsb.log
+#SCRON --open-mode=append
+05 * * * * /global/common/software/m2650/metatlas-repo/utils/sync_to_aws.sh egsb | ts
+
+##### THESE ARE RUN DURING THE UNTARGETED PIPELINE AS OF OCT, 2024
+#SCRON --job-name sync_untargeted_mzmine_results_to_gnps2
+#SCRON -q cron
+#SCRON -A m2650
+#SCRON -t 0:59:00
+#SCRON -o /global/cfs/cdirs/m2650/gnps2_sync_logs/sync_mzmine_results_to_gnps2.log
+#SCRON --open-mode=append
+#30 * * * * /global/common/software/m2650/infrastructure_automation/gnps2_mirror/sync_untargeted_mzmine_results_to_gnps2.sh | ts
+
+#SCRON --job-name sync_untargeted_raw_data_to_gnps2
+#SCRON -q cron
+#SCRON -A m2650 
+#SCRON -t 2:00:00
+#SCRON -o /global/cfs/cdirs/m2650/gnps2_sync_logs/sync_raw_data_to_gnps2.log
+#SCRON --open-mode=append
+#00 * * * * /global/common/software/m2650/infrastructure_automation/gnps2_mirror/sync_untargeted_raw_data_to_gnps2.sh | ts
+
+############################
