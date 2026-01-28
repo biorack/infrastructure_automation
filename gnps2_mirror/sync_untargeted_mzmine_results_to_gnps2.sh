@@ -17,7 +17,7 @@ printf "INFO: Starting mirror of mzmine data\n"
 local_directory="/global/cfs/cdirs/metatlas/projects/untargeted_tasks"
 remote_directory="/untargeted_tasks"
 remote_host="sftp.gnps2.org"
-remote_port="6542"
+remote_port="443"
 remote_user="bpbowen"
 
 for file_type in "csv" "tab" "mgf"; do
