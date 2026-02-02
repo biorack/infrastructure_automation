@@ -16,7 +16,7 @@ $basePath = "\\storage.jgi.lbl.gov\metabolomics"
 $departmentDataPath = Join-Path -Path $basePath -ChildPath $department
 
 # Check if SPSS shared drive is connected as S drive
-if (Test-Path -Path “S:”){
+if (Test-Path -Path ï¿½S:ï¿½){
 "S drive configured. Continuing..."
 }
 else {
@@ -29,7 +29,7 @@ $date = Get-Date -format yyyy-MM-d
 # If S drive has sufficient storage, initiate robocopy transfer from D drive
 if ($storage_drive.Free / 1GB -gt 500){
 
-Write-Host 'D drive sync in progress...’
+Write-Host 'D drive sync in progress...ï¿½
 
 robocopy D:\ `
     $departmentDataPath `
@@ -38,29 +38,35 @@ robocopy D:\ `
     /XJD "D:\`$`RECYCLE.BIN" `
     /log:"$departmentDataPath\${instrument}_D_Backup_Logs\$date.txt"
 
-Write-Host 'D drive sync complete’
+Write-Host 'D drive sync completeï¿½
 
 }
+
+
+###################################################################################
+### C drive sync is temporarily disabled to troublehsoot data duplication issue ###
+### 2/2/2026 - Thomas Harwood #####################################################
+###################################################################################
 
 # Perform second check for storage space, initiate robocopy transfer from C drive
-if ($storage_drive.Free / 1GB -gt 500){
+# if ($storage_drive.Free / 1GB -gt 500){
 
-Write-Host 'C drive sync in progress...’
+# Write-Host 'C drive sync in progress...ï¿½
 
-robocopy C:\ `
-    \\storage.jgi.lbl.gov\metabolomics\Inst_Backup\$department\$instrument `
-    /e /MT:10 /R:10 /FFT /Z /W:5 /TS /np /v /A-:SH /zB /XJ `
-    /XF ".raw" "hiberfil.sys" "pagefile.sys" "swapfile.sys" `
-    /XD "C:\DELL" "C:\Intel" "C:\Users" "C:\Windows" "C:\ProgramData\Dionex\Chromeleon\DataVaults\ChromeleonLocal\RawFiles" "C:\Program Files\Windows Defender " "C:\Program Files\CrowdStrike" "C:\options\Sophos" "C:\Program Files\Windows Defender Advanced Threat Protection " "C:\ProgramData\Package Cache " `
-    /XJD "C:\ProgramData\ApplicationData\Dionex\Chromeleon\DataVaults\ChromeleonLocal\RawFiles" "C:\`$`RECYCLE.BIN" `
-    /log:"\\storage.jgi.lbl.gov\metabolomics\Inst_Backup\$department\$instrument\${instrument}_C_Backup_Logs\$date.txt"
+# robocopy C:\ `
+#     \\storage.jgi.lbl.gov\metabolomics\Inst_Backup\$department\$instrument `
+#     /e /MT:10 /R:10 /FFT /Z /W:5 /TS /np /v /A-:SH /zB /XJ `
+#     /XF ".raw" "hiberfil.sys" "pagefile.sys" "swapfile.sys" `
+#     /XD "C:\DELL" "C:\Intel" "C:\Users" "C:\Windows" "C:\ProgramData\Dionex\Chromeleon\DataVaults\ChromeleonLocal\RawFiles" "C:\Program Files\Windows Defender " "C:\Program Files\CrowdStrike" "C:\options\Sophos" "C:\Program Files\Windows Defender Advanced Threat Protection " "C:\ProgramData\Package Cache " `
+#     /XJD "C:\ProgramData\ApplicationData\Dionex\Chromeleon\DataVaults\ChromeleonLocal\RawFiles" "C:\`$`RECYCLE.BIN" `
+#     /log:"\\storage.jgi.lbl.gov\metabolomics\Inst_Backup\$department\$instrument\${instrument}_C_Backup_Logs\$date.txt"
 
-Write-Host 'C drive sync complete’
+# Write-Host 'C drive sync completeï¿½
 
-}
+# }
 
-else {
+# else {
 
-Write-Host 'Insufficient destination S: disk space. Please clear some data off S: drive prior to copying'
+# Write-Host 'Insufficient destination S: disk space. Please clear some data off S: drive prior to copying'
 
-}
+# }
