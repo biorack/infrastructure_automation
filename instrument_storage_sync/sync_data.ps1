@@ -1,4 +1,4 @@
-# Get the directory where the script is located
+﻿# Get the directory where the script is located
 $scriptDirectory = Split-Path -Parent $MyInvocation.MyCommand.Definition
 
 # Specify the relative path to your JSON file
@@ -16,7 +16,7 @@ $basePath = "\\storage.jgi.lbl.gov\metabolomics"
 $departmentDataPath = Join-Path -Path $basePath -ChildPath $department
 
 # Check if SPSS shared drive is connected as S drive
-if (Test-Path -Path �S:�){
+if (Test-Path -Path S:){
 "S drive configured. Continuing..."
 }
 else {
@@ -29,7 +29,7 @@ $date = Get-Date -format yyyy-MM-d
 # If S drive has sufficient storage, initiate robocopy transfer from D drive
 if ($storage_drive.Free / 1GB -gt 500){
 
-Write-Host 'D drive sync in progress...�
+Write-Host 'D drive sync in progress...'
 
 robocopy D:\ `
     $departmentDataPath `
@@ -38,7 +38,7 @@ robocopy D:\ `
     /XJD "D:\`$`RECYCLE.BIN" `
     /log:"$departmentDataPath\${instrument}_D_Backup_Logs\$date.txt"
 
-Write-Host 'D drive sync complete�
+Write-Host 'D drive sync complete'
 
 }
 
@@ -51,7 +51,7 @@ Write-Host 'D drive sync complete�
 # Perform second check for storage space, initiate robocopy transfer from C drive
 # if ($storage_drive.Free / 1GB -gt 500){
 
-# Write-Host 'C drive sync in progress...�
+# Write-Host 'C drive sync in progress...'
 
 # robocopy C:\ `
 #     \\storage.jgi.lbl.gov\metabolomics\Inst_Backup\$department\$instrument `
@@ -61,7 +61,7 @@ Write-Host 'D drive sync complete�
 #     /XJD "C:\ProgramData\ApplicationData\Dionex\Chromeleon\DataVaults\ChromeleonLocal\RawFiles" "C:\`$`RECYCLE.BIN" `
 #     /log:"\\storage.jgi.lbl.gov\metabolomics\Inst_Backup\$department\$instrument\${instrument}_C_Backup_Logs\$date.txt"
 
-# Write-Host 'C drive sync complete�
+# Write-Host 'C drive sync complete
 
 # }
 
